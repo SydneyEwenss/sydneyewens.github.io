@@ -1,1 +1,73 @@
+<!DOCTYPE html>
+<head>
+    <title>Sydney Ewens Site</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li class="active"><a href="cookies.html">Cookie Clicker</a></li>
+                <li><a href="videos.html">Videos</a></li>
+            </ul>
+        </nav>
+        <h1>Sydney Ewens Website</h1>
+    </header>
 
+    <h2><span id="cookies">0</span> cookies</h2>
+		<span id="cookiesPerSecond">0</span> cookies per second
+	
+		<img src="../images/cookie.png" width="250px" onclick="makeCookie(clickPower)">
+
+		<button onclick="buyCursors()">Cursor [<span id="cursorPrice">15</span>] -- <span id="cursors">0</span></button>
+
+		<button onclick="buyGrandmas()">Grandma [<span id="grandmaPrice">15</span>] -- <span id="grandmas">0</span></button>
+
+
+
+	<script>
+		var cookies = 0;
+		var clickPower = 1;
+
+		var cursors = 0;
+		var cursorPrice = 15;
+
+		function makeCookie(clickPower) {
+			cookies = cookies + clickPower;
+			document.getElementById('cookies').innerHTML = Math.round(cookies);
+		}
+
+		function buyCursors() {
+			if (cookies >= cursorPrice) {
+				cookies = cookies - cursorPrice;
+				cursors = cursors + 1;
+				cursorPrice = Math.round(cursorPrice * 1.25);
+
+				document.getElementById('cookies').innerHTML = Math.round(cookies);
+				document.getElementById('cursorPrice').innerHTML = cursorPrice;
+				document.getElementById('cursors').innerHTML = cursors;
+			}
+		}
+
+		function buyGrandmas() {
+			if (cookies >= grandmaPrice) {
+				cookies = cookies - grandmaPrice;
+				grandmas = grandmas + 1;
+				grandmaPrice = Math.round(grandmaPrice * 1.25);
+
+				document.getElementById('cookies').innerHTML = Math.round(cookies);
+				document.getElementById('grandmaPrice').innerHTML = grandmaPrice;
+				document.getElementById('grandmas').innerHTML = grandmas;
+			}
+		}
+
+		setInterval(function() {
+			cookies = cookies + cursors /10;
+			cookies = cookies + grandmas * 5 /10;
+			document.getElementById('cookies').innerHTML = Math.round(cookies);
+		}, 100);
+	</script>
+    <footer>footer</footer>
+</body>
+</html>
