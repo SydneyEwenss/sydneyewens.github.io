@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/erosson/swarm-numberformat@v0.1.0/dist/swarm-numberformat.min.js"></script>
+    <link rel="stylesheet" href="styles/CookieClicker.css">
+    <title id="#title">Sydney Ewens' Cookie Clicker</title>
+</head>
+<body onload="updateCount()">
+    <div id="upgrades">
+
+    </div>
+    <h1 id="cookies">You have 0 cookies</h1>
+    <input type="checkbox" id="cookie"/>
+    <label class="btn" for="cookie"><img src="imgs/CookieClicker/cookie.png" class="cookieImg" onclick="clicker.cookies++"></label>
+    
+</body>
+</html>
+
+<script>
+    var clicker = {
+        cookies: 0,
+        upgrades: {
+            cursor:{
+                amount: 0,
+                cost: 10,
+                gps: 0.2,
+                name: "Cursors"
+            },
+            granny:{
+                amount: 0,
+                cost: 100,
+                gps: 0.8,
+                name: "Grannies"
+            },
+            factory:{
+                amount: 0,
+                cost: 500,
+                gps: 4.2,
+                name: "Factory"
+            }
+        }
+    };
+    var delay = 0;
+    function objectClicked(object){
+        if(clicker.upgrades[object].cost <= clicker.cookies){
+            clicker.cookies -= clicker.upgrades[object].cost;
+            clicker.upgrades[object].amount++;
+            clicker.upgrades[object].cost += Math.round(clicker.upgrades[object].cost * 0.15);
+            updateUpgrades();
+        }
+    }
+    function updateUpgrades(){
+        document.querySelector("#upgrades").innerHTML = "";
+        for(i in clicker.upgrades){
+            document.querySelector("#upgrades").innerHTML += `<button onclick="objectClicked('${i}')">${clicker.upgrades[i].name}</button> you have ${clicker.upgrades[i].amount}. Cost: ${clicker.upgrades[i].cost} cookies <br>`;
+        }
+    }
+    function updateCount(){
+        if(Cookies.get("clicker") != null && Cookies.get("clicker") != "undefined"){
+            var clicker1 = JSON.parse(Cookies.get("clicker"));
+            for(i in clicker.upgrades){
+                if(clicker1.upgrades[i] == null){
+                    clicker1.upgrades[i] = clicker.upgrades[i];
+                }
+            }
+            clicker = clicker1;
+        }
+        updateUpgrades();
+        setInterval(() => {
+            for(i in clicker.upgrades){
+                clicker.cookies += clicker.upgrades[i].amount * clicker.upgrades[i].gps / 20;
+            }
+            document.querySelector("#cookies").innerHTML = "You have "+numberformat.format(Number(String(clicker.cookies).split(".")[0]))+" cookies";
+            delay++;
+            if(delay >= 40){
+                Cookies.set("clicker",JSON.stringify(clicker), {expires: 100000});
+                delay = 0;
+            }
+        },50);
+    }
+</script>
